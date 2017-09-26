@@ -1,0 +1,28 @@
+---
+- name: include syadmin tasks
+  include_tasks: sysadmin.yml
+  vars:
+    sysadmin_boto_profile: sys-admin
+  tags:
+    - sysadmin
+
+- name: include net admin tasks
+  include_tasks: netadmin.yml
+  vars:
+    netadmin_boto_profile: net-admin
+  tags:
+    - netadmin
+
+- name: include storage tasks
+  include_tasks: sysadmin.yml
+  vars:
+    sysadmin_boto_profile: storage-admin
+  tags:
+    - storageadmin
+
+- name: include net sec admin tasks
+  include_tasks: netadmin.yml
+  vars:
+    netadmin_boto_profile: gateway-admin
+  tags:
+    - gatewayadmin

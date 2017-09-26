@@ -1,0 +1,55 @@
+---
+- name: get list of tags
+  local_action:
+    module: command
+    args: "ansible-playbook -i {{inventory_dir}} {{playbook_names_list}} --list-tags"
+  register: tags_output
+  tags:
+    - tagslist
+
+- name: get list of hosts
+  local_action:
+    module: command
+    args: "ansible-playbook -i {{inventory_dir}} {{playbook_names_list}} --list-hosts"
+  register: hosts_output
+  tags:
+    - hostslist
+
+- name: debug hosts output
+  debug:
+    var: hosts_output
+    verbosity: 3
+  tags:
+    - hostslist
+
+- name: debug tags output
+  debug:
+    var: tags_output
+    verbosity: 3
+  tags:
+    - tagslist
+- name: ensure output directory exists
+  file:
+    path: ./output/
+    state: directory
+
+- name: template output files
+  local_action:
+    module: template
+    src: "{{item}}.j2"
+    dest: "./output/{{playbook_names_list|regex_replace('.yml(\\s*)', '-')}}{{item}}"
+  with_items:
+    - hostsoutput.properties
+    - tagsoutput.properties
+  tags:
+    - tagslist
+    - hostslist
+
+- name: debug unique tags and hosts list
+  debug:
+    var: "{{item}}"
+    verbosity: 1
+  ignore_errors: yes
+  with_items:
+    - "{{unique_tags_list}}"
+    - "{{unique_hosts_list}}"

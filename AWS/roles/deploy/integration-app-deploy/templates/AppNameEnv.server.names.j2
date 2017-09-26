@@ -1,0 +1,3 @@
+{% for host in groups[group_name] %}
+{{ hostvars[groups[group_name][loop.index0]]['inventory_hostname']}}
+{% endfor %}

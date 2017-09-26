@@ -1,0 +1,16 @@
+---
+- name: include test role switch
+  include_tasks: testassumerole.yml
+  vars:
+    boto_profile: sys-admin
+    role_arn_value: "arn:aws:iam::479292807285:role/CMA-SysAdmin"
+  tags:
+    - sysadmin
+
+- name: include test role switch
+  include_tasks: testassumerole.yml
+  vars:
+    boto_profile: net-admin
+    role_arn_value: "arn:aws:iam::479292807285:role/CMA-NetworkAdmin"
+  tags:
+    - netadmin

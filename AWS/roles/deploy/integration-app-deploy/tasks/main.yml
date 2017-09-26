@@ -1,0 +1,26 @@
+---
+- name: create app deploy dirs
+  file:
+    path: "{{item.dir_name}}"
+    state: directory
+    group: "{{liberty_group_name}}"
+    # mode: "{{item.mode_setting}}"
+  with_items:
+    - {dir_name: "{{jenkins_build_path}}/{{app_name}}", mode_setting: "0755"}
+    - {dir_name: "{{jenkins_deploy_path}}", mode_setting: "0775"}
+  delegate_to: "{{deployment_manager_hostname}}"
+  tags:
+    - deployfiles
+
+- name: ensure deploy files are in place
+  template:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    owner: "{{liberty_user_name}}"
+    group: "{{liberty_group_name}}"
+    mode: 0755
+  delegate_to: "{{deployment_manager_hostname}}"
+  with_items:
+    - "{{jenkins_deploy_files}}"
+  tags:
+    - deployfiles

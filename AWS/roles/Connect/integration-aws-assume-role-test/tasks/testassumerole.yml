@@ -1,0 +1,39 @@
+---
+- name: assume sandbox {{boto_profile}} role
+  sts_assume_role:
+    role_arn: "{{role_arn_value}}"
+    profile: "{{boto_profile}}"
+    region: "{{target_aws_region}}"
+    role_session_name: "TestAssumeRole"
+    validate_certs: no
+  register: assumed_role
+
+- name: Gather EC2 facts sandbox
+  ec2_instance_facts:
+    ec2_url: "https://ec2.{{target_aws_region}}.amazonaws.com"
+    aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+    aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+    security_token: "{{ assumed_role.sts_creds.session_token }}"
+    region: "{{target_aws_region}}"
+    validate_certs: no
+  register: sandbox_sysadmin_facts_results
+  when: boto_profile == 'sys-admin'
+
+- name: Gather VPC facts sandbox
+  ec2_vpc_subnet_facts:
+    ec2_url: "https://ec2.{{target_aws_region}}.amazonaws.com"
+    aws_access_key: "{{ assumed_role.sts_creds.access_key }}"
+    aws_secret_key: "{{ assumed_role.sts_creds.secret_key }}"
+    security_token: "{{ assumed_role.sts_creds.session_token }}"
+    region: "{{target_aws_region}}"
+    validate_certs: no
+  register: sandbox_netadmin_facts_results
+  when: boto_profile == 'net-admin'
+
+- name: debug sandbox syadmin facts
+  debug:
+    var: sandbox_sysadmin_facts_results
+
+- name: debug sandbox netadmin facts
+  debug:
+    var: sandbox_netadmin_facts_results

@@ -1,0 +1,14 @@
+#global vars
+jenkins_build_path: "/cma/wlpbuilds/"
+jenkins_deploy_path: "{{jenkins_build_path}}/jenkins/{{env_name|upper}}/"
+liberty_user_name: wlpadm{{env_suffix_char}}
+liberty_group_name: wlpadm{{env_suffix_char}}
+
+app_name: someApplicationName
+group_name: someUndefinedGroup
+
+deployment_manager_hostname: "{{hostvars[groups['deployment-manager'][0]]['inventory_hostname']}}"
+
+jenkins_deploy_files:
+  - { src: AppNameEnv.jvm.names.j2, dest: "{{jenkins_build_path}}/{{app_name}}/{{app_name}}{{env_name|upper}}.jvm.names" }
+  - { src: AppNameEnv.server.names.j2, dest: "{{jenkins_build_path}}/{{app_name}}/{{app_name}}{{env_name|upper}}.server.names" }

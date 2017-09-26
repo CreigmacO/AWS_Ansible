@@ -1,0 +1,24 @@
+---
+- name: Gather EC2 facts {{sysadmin_boto_profile}}
+  ec2_instance_facts:
+    ec2_url: "https://ec2.{{target_aws_region}}.amazonaws.com"
+    profile: "{{sysadmin_boto_profile}}"
+    region: "{{target_aws_region}}"
+    validate_certs: no
+  register: remote_facts_results
+
+- name: debug EC2 facts results {{sysadmin_boto_profile}}
+  debug:
+    var: remote_facts_results
+
+- name: ec2 AMI find {{sysadmin_boto_profile}}
+  ec2_ami_find:
+    ami_id: ami-ea87a78f
+    profile: "{{sysadmin_boto_profile}}"
+    region: "{{target_aws_region}}"
+    validate_certs: no
+  register: ami_find_results
+
+- name: debug ami find results
+  debug:
+    var: ami_find_results

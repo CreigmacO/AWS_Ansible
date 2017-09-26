@@ -1,0 +1,3 @@
+---
+dependencies:
+  - {role: integration-code-checkout, become: yes, become_user: "{{git_checkout_user}}", when: "(does_code_checkout|bool == True)"}

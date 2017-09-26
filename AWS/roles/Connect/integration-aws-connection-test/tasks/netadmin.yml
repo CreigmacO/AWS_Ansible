@@ -1,0 +1,12 @@
+---
+- name: Gather VPC facts {{netadmin_boto_profile}}
+  ec2_vpc_subnet_facts:
+    ec2_url: "https://ec2.{{target_aws_region}}.amazonaws.com"
+    profile: "{{netadmin_boto_profile}}"
+    region: "{{target_aws_region}}"
+    validate_certs: no
+  register: vpc_facts_results
+
+- name: debug VPC facts results {{netadmin_boto_profile}}
+  debug:
+    var: vpc_facts_results
